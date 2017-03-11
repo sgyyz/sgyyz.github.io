@@ -95,7 +95,7 @@
 
   <div class="article-meta">
     <div class="article-datetime">
-  <a href="/2017/03/11/java-code-standard/" class="article-date"><time datetime="2017-03-11T03:16:06.834Z" itemprop="datePublished">2017-03-11</time></a>
+  <a href="/2017/03/11/java-code-standard/" class="article-date"><time datetime="2017-03-11T03:17:27.239Z" itemprop="datePublished">2017-03-11</time></a>
 </div>
 
     
@@ -123,7 +123,8 @@
 <h3 id="3-代码模块化"><a href="#3-代码模块化" class="headerlink" title="3. 代码模块化"></a>3. 代码模块化</h3><p><code>单一原则</code>：一个类、一个方法尽量只用处理一个功能，不要和其他的功能有耦合。即该类、方法属于<code>高内聚，低耦合</code>。这样做能达到模块最小化，方便后续的维护，或者其他系统的调用。<br><strong><code>UserDAO.java</code></strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line"><span class="function"><span class="keyword">public</span> User <span class="title">findByUserId</span><span class="params">(Integer id)</span> </span>&#123;</div><div class="line">   <span class="keyword">return</span> userDAO.find(id);</div><div class="line"> &#125;</div></pre></td></tr></table></figure></p>
 <p><strong><code>UserService.java</code></strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** * 处理User信息。</span></div><div class="line">* * 查询用户是否存在系统中。</div><div class="line">* <span class="doctag">@Param</span> Integer id 用户id</div><div class="line">* <span class="doctag">@Param</span> boolean isExist 用户是否存在</div><div class="line">*/</div><div class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">isUserExist</span><span class="params">(Integer id)</span> </span>&#123;</div><div class="line">  <span class="keyword">boolean</span> isExist = faslse;</div><div class="line">  isExist = userDAO.findByUserId(id);</div><div class="line">  <span class="comment">// ...... 可能会有一些其他的处理，所以这里用一个临时变量来存储该boolean值。</span></div><div class="line">  <span class="keyword">return</span> isExist;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
 <p><strong><code>UserController.java</code></strong><br><figure class="highlight java"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line"><span class="comment">/** * 创建用户</span></div><div class="line">* * <span class="doctag">@Param</span> User user 用户信息</div><div class="line">* <span class="doctag">@Param</span> ModelAndView view 返回视图</div><div class="line">*/</div><div class="line"><span class="function"><span class="keyword">public</span> ModelAndView <span class="title">createUser</span><span class="params">(User user)</span> </span>&#123;</div><div class="line">  <span class="comment">// ....... 验证用户的输入</span></div><div class="line">  <span class="comment">// 判断用户是否存在</span></div><div class="line">  <span class="keyword">boolean</span> isExist = userService.isUserExist(user.getId());</div><div class="line">  <span class="keyword">if</span>(isExist) &#123;</div><div class="line">    <span class="comment">// 用户存在，返回视图，显示错误信息</span></div><div class="line">    view.addObject(<span class="string">'isExist'</span>, <span class="keyword">true</span>);</div><div class="line">    <span class="keyword">return</span> view;</div><div class="line">  &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
-<h3 id="4-其他-编写代码时，思路一定要清晰，不要把所有逻辑都写在一个地方，这样对于代码的扩展以及维护是很麻烦的。"><a href="#4-其他-编写代码时，思路一定要清晰，不要把所有逻辑都写在一个地方，这样对于代码的扩展以及维护是很麻烦的。" class="headerlink" title="4. 其他 - 编写代码时，思路一定要清晰，不要把所有逻辑都写在一个地方，这样对于代码的扩展以及维护是很麻烦的。"></a>4. 其他 - 编写代码时，思路一定要清晰，不要把所有逻辑都写在一个地方，这样对于代码的扩展以及维护是很麻烦的。</h3><ul>
+<h3 id="4-其他"><a href="#4-其他" class="headerlink" title="4. 其他"></a>4. 其他</h3><ul>
+<li>编写代码时，思路一定要清晰，不要把所有逻辑都写在一个地方，这样对于代码的扩展以及维护是很麻烦的。</li>
 <li>空格，缩进一定要规范。避免大家格式不一样，每次代码更新和合并的时候出现太多的冲突。<a href="http://sgyyz.github.io/posts/tools/eclipse-space-instead-of-tab.html" target="_blank" rel="external">参考建议</a> - 每一行代码不要写的太多，标准规定是80个字符一行。根据实际情况来进行调整。</li>
 <li>空一行。空一行也是为增加代码的可读性。如上面的代码，在方法内部也有空一行，来区分出代码的逻辑。</li>
 </ul>
@@ -137,7 +138,7 @@
     
 
     <footer class="article-footer">
-      <a data-url="http://yoursite.com/2017/03/11/java-code-standard/" data-id="cj04oiq0j0000ear9bfeus7w8" class="article-share-link">
+      <a data-url="http://yoursite.com/2017/03/11/java-code-standard/" data-id="cj04okg200000ier9meqtiocc" class="article-share-link">
         <i class="fa fa-share"></i> Share
       </a>
       
